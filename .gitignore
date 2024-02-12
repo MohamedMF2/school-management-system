@@ -1,0 +1,7 @@
+*.log
+*.txt
+node_modules/
+db/
+uploads/
+config/
+test/
