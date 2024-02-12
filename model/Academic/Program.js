@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-
-const programSchema = new mongoose.Schema(
+const { Schema } = mongoose;
+const programSchema = new Schema(
   {
     name: {
       type: String,
@@ -17,31 +17,31 @@ const programSchema = new mongoose.Schema(
     code: {
       type: String,
       default: function () {
-        return this.name.split(" ")[0] + "-" + Math.floor(Math.random() * 1000) ;
+        return this.name.split(" ")[0] + "-" + Math.floor(Math.random() * 1000);
       },
     },
     createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Admin",
       required: true,
     },
     teachers: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Teacher",
         default: [],
       },
     ],
     students: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Student",
         default: [],
       },
     ],
     subjects: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Subject",
         default: [],
       },

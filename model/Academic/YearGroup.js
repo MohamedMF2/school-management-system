@@ -4,9 +4,9 @@ const { Schema } = mongoose;
 const yearGroupSchema = new Schema(
   {
     name: { type: String, required: true },
-    createdBy: { type: mongoose.Types.ObjectId, ref: "Admin", required: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: "Admin", required: true },
     academicYear: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "AcademicYear",
       required: true,
     },

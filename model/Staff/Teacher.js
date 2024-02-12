@@ -39,7 +39,7 @@ const teacherShema = new Schema(
       default: "teacher",
     },
     subject: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Subject",
       required: true,
     },
@@ -49,33 +49,33 @@ const teacherShema = new Schema(
       required: true,
     },
     program: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Program",
       required: true,
     },
     classLevel: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "ClassLevel",
       required: true,
     },
     academicYear: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "AcademicYear",
       required: true,
     },
     examsCreated: [
       {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Exam",
       },
     ],
     createdBy: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Admin",
       required: true,
     },
     academicTerm: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "AcademicTerm",
       required: true,
     },
