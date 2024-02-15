@@ -1,30 +1,26 @@
-const express = require("express");
-const morgan = require("morgan");
+//@desc      Register a new admin
+//@route     POST /api/v1/admins/register
+//@access    Private (requires authentication)
 
-const app = express();
-
-// --- middleware
-app.use(morgan("dev"));
-
-//---Routes
-
-//register admin
-app.post("/api/v1/admins/register", (req, res) => {
+exports.registerAdminCtrl = (req, res) => {
   try {
     res.status(201).json({
       status: "success",
-      data: "admin has been registered",
+      data: "Admin has been registered successfully.",
     });
   } catch (error) {
     res.status(400).json({
-      status: "failed",
+      status: "error",
       error: error.message,
     });
   }
-});
+};
 
-//login admin
-app.post("/api/v1/admins/login", (req, res) => {
+//@desc      Login admin
+//@route     POST /api/v1/admins/login
+//@access    Private (requires authentication)
+
+exports.loginAdminCtrl = (req, res) => {
   try {
     res.status(201).json({
       status: "success",
@@ -36,10 +32,13 @@ app.post("/api/v1/admins/login", (req, res) => {
       error: error.message,
     });
   }
-});
+};
 
-//GET admins
-app.get("/api/v1/admins", (req, res) => {
+//@desc      Get admins
+//@route     GET /api/v1/admins
+//@access    Private (requires authentication)
+
+exports.getAdminsCtrl = (req, res) => {
   try {
     res.status(200).json({
       status: "success",
@@ -51,10 +50,13 @@ app.get("/api/v1/admins", (req, res) => {
       error: error.message,
     });
   }
-});
+};
 
-//GET an admin
-app.get("/api/v1/admins/:id", (req, res) => {
+//@desc      Get an admin
+//@route     GET /api/v1/admins/:id
+//@access    Private (requires authentication)
+
+exports.getAdminCtrl = (req, res) => {
   try {
     res.status(200).json({
       status: "success",
@@ -66,10 +68,13 @@ app.get("/api/v1/admins/:id", (req, res) => {
       error: error.message,
     });
   }
-});
+};
 
-//PUT -update an admin
-app.put("/api/v1/admins/:id", (req, res) => {
+//@desc      Update an admin
+//@route     PUT /api/v1/admins/:id
+//@access    Private (requires authentication)
+
+exports.updateAdminCtrl = (req, res) => {
   try {
     res.status(200).json({
       status: "success",
@@ -81,10 +86,13 @@ app.put("/api/v1/admins/:id", (req, res) => {
       error: error.message,
     });
   }
-});
+};
 
-//DELETE -update an admin
-app.delete("/api/v1/admins/:id", (req, res) => {
+//@desc      Delete an admin
+//@route     DELETE /api/v1/admins/:id
+//@access    Private (requires authentication)
+
+exports.deleteAdminCtrl = (req, res) => {
   try {
     res.status(200).json({
       status: "success",
@@ -96,10 +104,13 @@ app.delete("/api/v1/admins/:id", (req, res) => {
       error: error.message,
     });
   }
-});
+};
 
-//PUT -admin is suspending the teacher with the given id
-app.put("/api/v1/admins/suspend/teacher/:id", (req, res) => {
+//@desc      Update as admin suspends teach with a given ID
+//@route     PUT /api/v1/admins/suspend/teacher/:id
+//@access    Private (requires authentication)
+
+exports.adminSuspendTeacherCtrl = (req, res) => {
   try {
     res.status(200).json({
       status: "success",
@@ -111,10 +122,13 @@ app.put("/api/v1/admins/suspend/teacher/:id", (req, res) => {
       error: error.message,
     });
   }
-});
+};
 
-//PUT -admin is unsuspending the teacher with the given id
-app.put("/api/v1/admins/unsuspend/teacher/:id", (req, res) => {
+//@desc      Update as admin unsuspends teach with a given ID
+//@route     PUT /api/v1/admins/unsuspend/teacher/:id
+//@access    Private (requires authentication)
+
+exports.adminUnsuspendTeacherCtrl = (req, res) => {
   try {
     res.status(200).json({
       status: "success",
@@ -126,10 +140,13 @@ app.put("/api/v1/admins/unsuspend/teacher/:id", (req, res) => {
       error: error.message,
     });
   }
-});
+};
 
-//PUT -admin is withdrawing the teacher with the given id
-app.put("/api/v1/admins/withdraw/teacher/:id", (req, res) => {
+//@desc      admin is withdrawing the teacher with the given id
+//@route     PUT /api/v1/admins/withdraw/teacher/:id
+//@access    Private (requires authentication)
+
+exports.adminWithdrawTeacherCtrl = (req, res) => {
   try {
     res.status(200).json({
       status: "success",
@@ -141,10 +158,13 @@ app.put("/api/v1/admins/withdraw/teacher/:id", (req, res) => {
       error: error.message,
     });
   }
-});
+};
 
-//PUT -admin is unwithdrawing the teacher with the given id
-app.put("/api/v1/admins/unwithdraw/teacher/:id", (req, res) => {
+//@desc      admin is unwithdrawing the teacher with the given id
+//@route     PUT /api/v1/admins/unwithdraw/teacher/:id
+//@access    Private (requires authentication)
+
+exports.adminUnwithdrawTeacherCtrl = (req, res) => {
   try {
     res.status(200).json({
       status: "success",
@@ -156,10 +176,13 @@ app.put("/api/v1/admins/unwithdraw/teacher/:id", (req, res) => {
       error: error.message,
     });
   }
-});
+};
 
-//PUT -admin is publishing the exam with the given id
-app.put("/api/v1/admins/publish/exam/:id", (req, res) => {
+//@desc      admin is publish the exam with the given id
+//@route     PUT /api/v1/admins/publish/exam/:id
+//@access    Private (requires authentication)
+
+exports.adminPublishExamCtrl = (req, res) => {
   try {
     res.status(200).json({
       status: "success",
@@ -171,10 +194,13 @@ app.put("/api/v1/admins/publish/exam/:id", (req, res) => {
       error: error.message,
     });
   }
-});
+};
 
-//PUT -admin is unpublishing the exam with the given id
-app.put("/api/v1/admins/unpublish/exam/:id", (req, res) => {
+//@desc      admin is unpublish the exam with the given id
+//@route     PUT /api/v1/admins/unpublish/exam/:id
+//@access    Private (requires authentication)
+
+exports.adminUnpublishExamCtrl = (req, res) => {
   try {
     res.status(200).json({
       status: "success",
@@ -186,8 +212,4 @@ app.put("/api/v1/admins/unpublish/exam/:id", (req, res) => {
       error: error.message,
     });
   }
-});
-
-
-
-module.exports = app;
+};
