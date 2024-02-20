@@ -8,8 +8,10 @@ const app = express();
 //http methods logging middleware
 app.use(morgan("dev"));
 
+//parse json
+app.use(express.json());
 // Admin Middleware for routing different endpoints
-app.use("/api/v1/admins",adminRouter);
+app.use("/api/v1/admins", adminRouter);
 
 
 module.exports = app;

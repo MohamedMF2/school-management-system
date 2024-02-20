@@ -1,15 +1,41 @@
+const Admin = require("../../model/Staff/Admin");
+const { hashPassword, verifyPasswords } = require("../../utils/passwordUtils");
+const bcrypt = require("bcrypt");
 //@desc      Register a new admin
 //@route     POST /api/v1/admins/register
 //@access    Private (requires authentication)
 
-exports.registerAdminCtrl = (req, res) => {
+exports.registerAdminCtrl = async (req, res) => {
+  //destructure the request body
+  const { name, email, password } = req.body;
+
   try {
+    //check if admin with the provided email exists
+    const adminFound = await Admin.findOne({ email: email });
+
+    if (adminFound) {
+      res.json({
+        status: "error",
+        error: "Admin is already registered.",
+      });
+    }
+
+    //create new admin with hash the password using bcrypt
+    const hashedPassword = await hashPassword(password);
+    const newAdmin = await Admin.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    // respond with success message and the created resource
     res.status(201).json({
       status: "success",
-      data: "Admin has been registered successfully.",
+      message: "Admin has been registered successfully.",
+      data: newAdmin,
     });
   } catch (error) {
-    res.status(400).json({
+    res.status(500).json({
       status: "error",
       error: error.message,
     });
@@ -20,14 +46,44 @@ exports.registerAdminCtrl = (req, res) => {
 //@route     POST /api/v1/admins/login
 //@access    Private (requires authentication)
 
-exports.loginAdminCtrl = (req, res) => {
+exports.loginAdminCtrl = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    res.status(201).json({
-      status: "success",
-      data: "admin is logged in",
-    });
+    // Find admin by email
+    const adminAccount = await Admin.findOne({ email });
+
+    if (!adminAccount) {
+      return res.status(404).json({
+        status: "failed",
+        message: "Admin account not found",
+      });
+    }
+
+    // Compare input password with hashed password
+    const passwordMatch = await verifyPasswords(
+      password,
+      adminAccount.password
+    );
+
+    if (adminAccount && passwordMatch ) {
+      // Passwords match
+      console.log("Passwords match!");
+      return res.status(200).json({
+        status: "success",
+        message: "Admin is logged in",
+        data: adminAccount, // You might want to exclude sensitive data from here
+      });
+    } else {
+      // Passwords don't match
+      console.log("Passwords do not match!");
+      return res.status(401).json({
+        status: "failed",
+        message: "Invalid credentials",
+      });
+    }
   } catch (error) {
-    res.status(400).json({
+    console.error("Error logging in:", error);
+    return res.status(500).json({
       status: "failed",
       error: error.message,
     });
