@@ -1,46 +1,38 @@
 const Admin = require("../../model/Staff/Admin");
 const { hashPassword, verifyPasswords } = require("../../utils/passwordUtils");
 const bcrypt = require("bcrypt");
+const asyncHandler = require("express-async-handler");
+
 //@desc      Register a new admin
 //@route     POST /api/v1/admins/register
 //@access    Private (requires authentication)
 
-exports.registerAdminCtrl = async (req, res) => {
+exports.registerAdminCtrl = asyncHandler(async (req, res) => {
   //destructure the request body
   const { name, email, password } = req.body;
 
-  try {
-    //check if admin with the provided email exists
-    const adminFound = await Admin.findOne({ email: email });
+  //check if admin with the provided email exists
+  const adminFound = await Admin.findOne({ email: email });
 
-    if (adminFound) {
-      res.json({
-        status: "error",
-        error: "Admin is already registered.",
-      });
-    }
-
-    //create new admin with hash the password using bcrypt
-    const hashedPassword = await hashPassword(password);
-    const newAdmin = await Admin.create({
-      name,
-      email,
-      password: hashedPassword,
-    });
-
-    // respond with success message and the created resource
-    res.status(201).json({
-      status: "success",
-      message: "Admin has been registered successfully.",
-      data: newAdmin,
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "error",
-      error: error.message,
-    });
+  if (adminFound) {
+    throw new Error("admin exists");
   }
-};
+
+  //create new admin with hash the password using bcrypt
+  const hashedPassword = await hashPassword(password);
+  const newAdmin = await Admin.create({
+    name,
+    email,
+    password: hashedPassword,
+  });
+
+  // respond with success message and the created resource
+  res.status(201).json({
+    status: "success",
+    message: "Admin has been registered successfully.",
+    data: newAdmin,
+  });
+});
 
 //@desc      Login admin
 //@route     POST /api/v1/admins/login
@@ -65,7 +57,7 @@ exports.loginAdminCtrl = async (req, res) => {
       adminAccount.password
     );
 
-    if (adminAccount && passwordMatch ) {
+    if (adminAccount && passwordMatch) {
       // Passwords match
       console.log("Passwords match!");
       return res.status(200).json({
