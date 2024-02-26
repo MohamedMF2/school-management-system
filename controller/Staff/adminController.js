@@ -1,7 +1,8 @@
 const Admin = require("../../model/Staff/Admin");
+const generateToken = require("../../utils/generateToken");
 const { hashPassword, verifyPasswords } = require("../../utils/passwordUtils");
-const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
+const verifyToken = require("../../utils/verifyToken");
 
 //@desc      Register a new admin
 //@route     POST /api/v1/admins/register
@@ -38,49 +39,43 @@ exports.registerAdminCtrl = asyncHandler(async (req, res) => {
 //@route     POST /api/v1/admins/login
 //@access    Private (requires authentication)
 
-exports.loginAdminCtrl = async (req, res) => {
+exports.loginAdminCtrl = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  try {
-    // Find admin by email
-    const adminAccount = await Admin.findOne({ email });
 
-    if (!adminAccount) {
-      return res.status(404).json({
-        status: "failed",
-        message: "Admin account not found",
-      });
-    }
+  // Find admin by email
+  const user = await Admin.findOne({ email });
 
-    // Compare input password with hashed password
-    const passwordMatch = await verifyPasswords(
-      password,
-      adminAccount.password
-    );
-
-    if (adminAccount && passwordMatch) {
-      // Passwords match
-      console.log("Passwords match!");
-      return res.status(200).json({
-        status: "success",
-        message: "Admin is logged in",
-        data: adminAccount, // You might want to exclude sensitive data from here
-      });
-    } else {
-      // Passwords don't match
-      console.log("Passwords do not match!");
-      return res.status(401).json({
-        status: "failed",
-        message: "Invalid credentials",
-      });
-    }
-  } catch (error) {
-    console.error("Error logging in:", error);
-    return res.status(500).json({
+  if (!user) {
+    return res.status(404).json({
       status: "failed",
-      error: error.message,
+      message: "invalid login credentials",
     });
   }
-};
+
+  // Compare input password with hashed password
+  const passwordMatch = await verifyPasswords(password, user.password);
+
+  if (user && passwordMatch) {
+    // Passwords match
+    const token = generateToken(user._id);
+    const verify = verifyToken(token);
+
+    return res.status(200).json({
+      status: "success",
+      message: "Admin is logged in",
+      data: generateToken(user._id),
+      user,
+      verify,
+    });
+  } else {
+    // Passwords don't match
+    console.log("Passwords do not match!");
+    return res.status(401).json({
+      status: "failed",
+      message: "Invalid credentials",
+    });
+  }
+});
 
 //@desc      Get admins
 //@route     GET /api/v1/admins
@@ -106,6 +101,7 @@ exports.getAdminsCtrl = (req, res) => {
 
 exports.getAdminCtrl = (req, res) => {
   try {
+    console.log(req.userAuth)
     res.status(200).json({
       status: "success",
       data: "admin with the give id is found ",
