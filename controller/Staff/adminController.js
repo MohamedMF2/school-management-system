@@ -57,13 +57,13 @@ exports.loginAdminCtrl = asyncHandler(async (req, res) => {
 
   if (user && passwordMatch) {
     // Passwords match
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, 20);
     const verify = verifyToken(token);
 
     return res.status(200).json({
       status: "success",
       message: "Admin is logged in",
-      data: generateToken(user._id),
+      data: generateToken(user._id, 20),
       user,
       verify,
     });
@@ -81,38 +81,32 @@ exports.loginAdminCtrl = asyncHandler(async (req, res) => {
 //@route     GET /api/v1/admins
 //@access    Private (requires authentication)
 
-exports.getAdminsCtrl = (req, res) => {
-  try {
-    res.status(200).json({
-      status: "success",
-      data: "admins are found and listed",
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "failed",
-      error: error.message,
-    });
-  }
-};
+exports.getAdminsCtrl = asyncHandler(async (req, res) => {
+  const admins = await Admin.find();
+  res.status(200).json({
+    status: "success",
+    message: "admins fetched successfully",
+    data: admins,
+  });
+});
 
 //@desc      Get an admin
 //@route     GET /api/v1/admins/:id
 //@access    Private (requires authentication)
 
-exports.getAdminCtrl = (req, res) => {
-  try {
-    console.log(req.userAuth)
+exports.getAdminProfileCtrl = asyncHandler(async (req, res) => {
+  console.log(`req.userAuth${req.userAuth}`);
+  const admin =await Admin.findById(req.userAuth?._id).select("-createdAt -updatedAt -password  -_id");
+  if (!admin) {
+    throw new Error("admin not not found");
+  } else {
     res.status(200).json({
       status: "success",
-      data: "admin with the give id is found ",
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "failed",
-      error: error.message,
+      message: "admin fetched successfully",
+      data: admin,
     });
   }
-};
+});
 
 //@desc      Update an admin
 //@route     PUT /api/v1/admins/:id

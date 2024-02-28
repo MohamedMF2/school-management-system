@@ -3,7 +3,7 @@ const {
   registerAdminCtrl,
   loginAdminCtrl,
   getAdminsCtrl,
-  getAdminCtrl,
+  getAdminProfileCtrl,
   updateAdminCtrl,
   deleteAdminCtrl,
   adminSuspendTeacherCtrl,
@@ -20,13 +20,13 @@ const adminRouter = express.Router();
 adminRouter.post("/register", registerAdminCtrl);
 
 //login admin
-adminRouter.post("/login", loginAdminCtrl);
+adminRouter.post("/login",loginAdminCtrl);
 
 //GET admins
-adminRouter.get("/", getAdminsCtrl);
+adminRouter.get("/", isLogin, getAdminsCtrl);
 
-//GET an admin
-adminRouter.get("/:id", isLogin,getAdminCtrl);
+//GET  admin profile
+adminRouter.get("/profile", isLogin, getAdminProfileCtrl);
 
 //PUT -update an admin
 adminRouter.put("/:id", updateAdminCtrl);
@@ -47,7 +47,7 @@ adminRouter.put("/withdraw/teacher/:id", adminWithdrawTeacherCtrl);
 adminRouter.put("/unwithdraw/teacher/:id", adminUnwithdrawTeacherCtrl);
 
 //PUT -admin is publishing the exam with the given id
-adminRouter.put("/publish/exam/:id",adminPublishExamCtrl );
+adminRouter.put("/publish/exam/:id", adminPublishExamCtrl);
 
 //PUT -admin is unpublishing the exam with the given id
 adminRouter.put("/unpublish/exam/:id", adminUnpublishExamCtrl);

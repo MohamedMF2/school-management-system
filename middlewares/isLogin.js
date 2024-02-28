@@ -8,13 +8,14 @@ const isLogin = async (req, res, next) => {
 
   //verify token
   const verifiedToken = verifyToken(token);
+  console.log({verifiedToken});
   if (verifiedToken) {
     const user = await Admin.findById(verifiedToken.id);
-    console.log({ user });
     req.userAuth = user;
     next();
   } else {
-    next(new Error("token expired or invalid"));
+    const err = new Error("token expired or invalid");
+    next(err);
   }
 };
 module.exports = isLogin;
